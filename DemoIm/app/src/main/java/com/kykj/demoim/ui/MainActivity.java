@@ -5,8 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.kykj.demoim.R;
+import com.kykj.demoim.mode.permission.MPermission;
+import com.kykj.demoim.mode.permission.annotation.OnMPermissionDenied;
+import com.kykj.demoim.mode.permission.annotation.OnMPermissionGranted;
+import com.kykj.demoim.mode.permission.annotation.OnMPermissionNeverAskAgain;
 import com.kykj.demoim.presenter.MainPresenter;
 
 import butterknife.Bind;
@@ -23,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     MainPresenter mainPresenter;
 
+    private final int BASIC_PERMISSION_REQUEST_CODE = 110;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initEventListener(){
         mainPresenter = new MainPresenter(this);
+        mainPresenter.requestBasicPermission();
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * ��¼
+     * 登录
      */
     private void doLogin(){
         String username = et_username.getText().toString().trim();
@@ -50,5 +58,19 @@ public class MainActivity extends AppCompatActivity {
         mainPresenter.login(username,pwd);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        MPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    }
 
+    @OnMPermissionGranted(BASIC_PERMISSION_REQUEST_CODE)
+    public void onBasicPermissionSuccess() {
+        Toast.makeText(this, "授权成功", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnMPermissionDenied(BASIC_PERMISSION_REQUEST_CODE)
+    @OnMPermissionNeverAskAgain(BASIC_PERMISSION_REQUEST_CODE)
+    public void onBasicPermissionFailed() {
+        Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
+    }
 }

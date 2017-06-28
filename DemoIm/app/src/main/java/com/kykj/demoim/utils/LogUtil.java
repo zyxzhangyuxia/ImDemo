@@ -1,6 +1,5 @@
 package com.kykj.demoim.utils;
 
-import android.nfc.Tag;
 import android.util.Log;
 
 /**

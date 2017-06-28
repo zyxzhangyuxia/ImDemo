@@ -9,9 +9,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!--<meta-data-->
+            <!--android:name="com.amap.api.v2.apikey"-->
+            <!--android:value="${AMAP_KEY}"/>-->
         <!--设置APPKey-->
         <meta-data
-            android:name="com.kykj.demoim.appKey"
+            android:name="com.netease.nim.appKey"
             android:value="ab73599e8a6efec7abb0142449aa147f" />
         <!-- 声明网易云通信后台服务，如需保持后台推送，使用独立进程效果会更好。 -->
         <service
@@ -59,12 +63,12 @@
             <!--android:process=":cosine">-->
         <!--</receiver>-->
 
-        <!--<meta-data-->
-            <!--android:name="com.netease.cosine.target"-->
-            <!--android:value=""/>-->
-        <!--<meta-data-->
-            <!--android:name="com.netease.cosine.target.receiver"-->
-            <!--android:value="com.netease.nimlib.service.NimReceiver"/>-->
+        <meta-data
+            android:name="com.netease.cosine.target"
+            android:value=""/>
+        <meta-data
+            android:name="com.netease.cosine.target.receiver"
+            android:value="com.netease.nimlib.service.NimReceiver"/>
 
         <activity android:name=".ui.MainActivity">
             <intent-filter>
@@ -104,5 +108,11 @@
         android:name="com.kykj.demoim.permission.RECEIVE_MSG"
         android:protectionLevel="signature"/>
     <uses-permission android:name="com.kykj.demoim.permission.RECEIVE_MSG"/>
+
+    <!-- 小米推送 -->
+    <permission
+        android:name="com.kykj.demoim.permission.MIPUSH_RECEIVE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.kykj.demoim.permission.MIPUSH_RECEIVE"/>
 
 </manifest>

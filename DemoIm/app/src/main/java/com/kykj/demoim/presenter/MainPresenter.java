@@ -1,5 +1,7 @@
 package com.kykj.demoim.presenter;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -7,6 +9,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.kykj.demoim.R;
+import com.kykj.demoim.mode.permission.MPermission;
 import com.kykj.demoim.utils.LogUtil;
 import com.kykj.demoim.utils.MD5;
 import com.netease.nimlib.sdk.AbortableFuture;
@@ -21,6 +24,7 @@ import com.netease.nimlib.sdk.auth.LoginInfo;
 
 public class MainPresenter {
     private Context context;
+    private final int BASIC_PERMISSION_REQUEST_CODE = 110;
     public MainPresenter(Context context){
         this.context = context;
     }
@@ -35,12 +39,15 @@ public class MainPresenter {
             return;
         }
         LoginInfo loginInfo = new LoginInfo(account,tokenFromPassword(token));
+        LogUtil.D("loginInfo.getAccount = "+loginInfo.getAccount());
+        LogUtil.D("loginInfo.getToken = "+loginInfo.getToken());
         AbortableFuture<LoginInfo> loginRequest = NIMClient.getService(AuthService.class).login(loginInfo);
 
         RequestCallback<LoginInfo> callback = new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {
-                LogUtil.D("param = "+"account = "+param.getAccount()+""+param.getToken());
+                LogUtil.D("param = "+param.getAccount()+"--account = "+""+param.getToken());
+                //登录成功，缓存数据
             }
 
             @Override
@@ -67,6 +74,7 @@ public class MainPresenter {
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             if (appInfo != null) {
+                LogUtil.D("appkey = "+appInfo.metaData.getString("com.kykj.demoim.appKey"));
                 return appInfo.metaData.getString("com.kykj.demoim.appKey");
             }
         } catch (Exception e) {
@@ -74,6 +82,25 @@ public class MainPresenter {
         }
         return null;
     }
+
+    /**
+     * 申请权限
+     */
+    public void requestBasicPermission() {
+        MPermission.with((Activity) context)
+                .setRequestCode(BASIC_PERMISSION_REQUEST_CODE)
+                .permissions(BASIC_PERMISSIONS)
+                .request();
+    }
+
+    /**
+     * 基本权限管理
+     */
+
+    private final String[] BASIC_PERMISSIONS = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     private void showMsg(String msg){
         Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
