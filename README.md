@@ -1,4 +1,7 @@
 # ImDemo
+
+Demo 测试账号&密码  15101319095    123456
+
 一个简单的IM通信的Demo
 Demo开发步骤：
 
@@ -7,44 +10,9 @@ Demo开发步骤：
 3. 使用as创建的项目的packageName,applicationName在网易云端创建应用，在云端会生成一个
    app Key和 App Secret
 4. 通过gradle集成SDK
-   首先，在整个工程的 build.gradle 文件中，配置repositories，使用 jcenter 或者 maven ，二选一即可，如下：
-       allprojects {
-           repositories {
-               jcenter() // 或者 mavenCentral()
-           }
-       }
-   第二步，在主工程的 build.gradle 文件中，添加 dependencies。根据自己项目的需求，添加不同的依赖即可。注意：版本号必须一致，这里以3.3.0版本为例：
-       android {
-          defaultConfig {
-              ndk {
-                  //设置支持的SO库架构
-                  abiFilters "armeabi-v7a", "x86","arm64-v8a","x86_64"
-               }
-          }
-       }
-       
-       dependencies {
-           compile fileTree(dir: 'libs', include: '*.jar')
-           // 添加依赖。注意，版本号必须一致。
-           // 基础功能 (必需)
-           compile 'com.netease.nimlib:basesdk:3.3.0'
-           // 音视频需要
-           compile 'com.netease.nimlib:avchat:3.3.0'
-           // 聊天室需要
-           compile 'com.netease.nimlib:chatroom:3.3.0'
-           // 实时会话服务需要
-           compile 'com.netease.nimlib:rts:3.3.0'
-           // 全文检索服务需要
-           compile 'com.netease.nimlib:lucene:3.3.0'
-       }
    
 5. 配置权限和组件
-   在 AndroidManifest.xml 中加入以下配置:
-       <?xml version="1.0" encoding="utf-8"?>
-       <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              package="xxx">
-       
-           <!-- 权限声明 -->
+
            <!-- 访问网络状态-->
            <uses-permission android:name="android.permission.INTERNET" />
            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -142,6 +110,7 @@ Demo开发步骤：
            </application>
        </manifest>
 6. 混淆配置
+
    --------------通过以上的步骤，环境的配置几本完成，接下来需要在代码中做一些初始化的工作------------
 7. 在Application中初始化SDK
    在你的程序的 Application 的 onCreate 中，加入网易云通信 SDK 的初始化代码：
