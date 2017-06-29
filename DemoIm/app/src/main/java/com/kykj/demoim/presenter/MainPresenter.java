@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.kykj.demoim.R;
 import com.kykj.demoim.mode.permission.MPermission;
+import com.kykj.demoim.mode.permission.cache.DemoCache;
 import com.kykj.demoim.utils.LogUtil;
 import com.kykj.demoim.utils.MD5;
 import com.netease.nimlib.sdk.AbortableFuture;
@@ -29,6 +30,11 @@ public class MainPresenter {
         this.context = context;
     }
 
+    /**
+     * 用户登录
+     * @param account
+     * @param token
+     */
     public void login(String account, String token){
         if(TextUtils.isEmpty(account)){
             showMsg(context.getResources().getString(R.string.empty_username));
@@ -47,7 +53,9 @@ public class MainPresenter {
             @Override
             public void onSuccess(LoginInfo param) {
                 LogUtil.D("param = "+param.getAccount()+"--account = "+""+param.getToken());
-                //��¼�ɹ�����������
+                //登录成功，缓存数据
+                setDemoChahe(param.getAccount(),param.getToken());
+
             }
 
             @Override
@@ -63,13 +71,22 @@ public class MainPresenter {
         loginRequest.setCallback(callback);
     }
 
-
+    /**
+     * 加密
+     * @param password
+     * @return
+     */
     public String tokenFromPassword(String password) {
         String appKey = readAppKey(context);
         boolean isDemo = "ab73599e8a6efec7abb0142449aa147f".equals(appKey);
         return isDemo ? MD5.getStringMD5(password) : password;
     }
 
+    /**
+     * 读取应用的app-key
+     * @param context
+     * @return
+     */
     private static String readAppKey(Context context) {
         try {
             ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
@@ -84,7 +101,7 @@ public class MainPresenter {
     }
 
     /**
-     * ����Ȩ��
+     * 申请权限
      */
     public void requestBasicPermission() {
         MPermission.with((Activity) context)
@@ -94,7 +111,7 @@ public class MainPresenter {
     }
 
     /**
-     * ����Ȩ�޹���
+     * 基本权限管理
      */
 
     private final String[] BASIC_PERMISSIONS = new String[]{
@@ -102,6 +119,31 @@ public class MainPresenter {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
+
+    /**
+     * 设置缓存并保存用户登录信息
+     * @param account
+     * @param token
+     */
+    public void setDemoChahe(String account,String token){
+        DemoCache.setAccount(account);
+        saveLoginInfo(account, token);
+    }
+
+    /**
+     * 保存已登录的用户信息
+     * @param account
+     * @param token
+     */
+    public void saveLoginInfo(String account,String token){
+        Preference.saveUserAccount(account);
+        Preference.saveUserToken(token);
+    }
+
+    /**
+     * toast信息
+     * @param msg
+     */
     private void showMsg(String msg){
         Toast.makeText(context,msg,Toast.LENGTH_SHORT).show();
     }
