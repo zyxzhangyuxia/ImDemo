@@ -59,7 +59,6 @@ public class MainPresenter {
                 //登录成功，缓存数据
                 setDemoChahe(param.getAccount(),param.getToken());
                 EventBus.getDefault().post(MessageEvent.TAG_LOGIN_SUCCESS);
-                LogUtil.D("EventBus发送事件");
             }
 
             @Override

@@ -8,4 +8,7 @@
     <string name="noregister">没有用户名？点我注册</string>
     <string name="empty_username">用户名不能为空</string>
     <string name="empty_pwd">秘密不能为空</string>
+    <string name="subtitle">子菜单</string>
+    <string name="tab">导航</string>
+    <string name="page">页面</string>
 </resources>
