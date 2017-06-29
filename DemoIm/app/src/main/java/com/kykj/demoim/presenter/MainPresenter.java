@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.kykj.demoim.R;
 import com.kykj.demoim.mode.permission.MPermission;
+import com.kykj.demoim.mode.permission.MessageEvent;
 import com.kykj.demoim.mode.permission.cache.DemoCache;
 import com.kykj.demoim.utils.LogUtil;
 import com.kykj.demoim.utils.MD5;
@@ -18,6 +19,8 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by vectoria on 2017/6/27.
@@ -55,7 +58,8 @@ public class MainPresenter {
                 LogUtil.D("param = "+param.getAccount()+"--account = "+""+param.getToken());
                 //登录成功，缓存数据
                 setDemoChahe(param.getAccount(),param.getToken());
-
+                EventBus.getDefault().post(MessageEvent.TAG_LOGIN_SUCCESS);
+                LogUtil.D("EventBus发送事件");
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.kykj.demoim.application;
 
 import android.app.Application;
 
+import com.kykj.demoim.mode.permission.cache.DemoCache;
 import com.kykj.demoim.presenter.ApplicationPresenter;
 import com.netease.nimlib.sdk.NIMClient;
 
@@ -17,7 +18,7 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         presenter = new ApplicationPresenter(this);
-
+        DemoCache.setContext(this);
         /**
          * SDK初始化，如果已经存在登录用户，则SDK完成自动登录
          * 1.this

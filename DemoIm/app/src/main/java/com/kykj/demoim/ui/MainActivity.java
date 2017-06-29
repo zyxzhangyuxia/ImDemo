@@ -1,23 +1,29 @@
 package com.kykj.demoim.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kykj.demoim.base.BaseActivity;
 import com.kykj.demoim.R;
 import com.kykj.demoim.mode.permission.MPermission;
+import com.kykj.demoim.mode.permission.MessageEvent;
 import com.kykj.demoim.mode.permission.annotation.OnMPermissionDenied;
 import com.kykj.demoim.mode.permission.annotation.OnMPermissionGranted;
 import com.kykj.demoim.mode.permission.annotation.OnMPermissionNeverAskAgain;
 import com.kykj.demoim.presenter.MainPresenter;
+import com.kykj.demoim.utils.LogUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Bind(R.id.btn_login)
     Button btn_login;
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initEventListener();
+        EventBus.getDefault().register(this);
     }
 
     private void initEventListener(){
@@ -72,5 +79,20 @@ public class MainActivity extends AppCompatActivity {
     @OnMPermissionNeverAskAgain(BASIC_PERMISSION_REQUEST_CODE)
     public void onBasicPermissionFailed() {
         Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginSuccess(String msg){
+       if(MessageEvent.TAG_LOGIN_SUCCESS.equals(msg)){
+           LogUtil.D("接受登录成功的事件" +msg);
+           HomeActivity.startActivity(this,null);
+           finish();
+       }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
